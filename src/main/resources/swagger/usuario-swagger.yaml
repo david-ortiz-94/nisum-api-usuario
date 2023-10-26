@@ -37,6 +37,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Ocurrió un error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   schemas:
@@ -80,10 +86,12 @@ components:
         name:
           type: string
           description: nombre de usuario
+          minLength: 1
           example: Juan Rodriguez
         email:
           type: string
           description: correo eletronico
+          pattern: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
           example: juan@rodriguez.org
         password:
           type: string
@@ -105,7 +113,7 @@ components:
           type: string
           description: código de ciudad
           example: 1
-        contrycode:
+        countrycode:
           type: string
           description: código de país
           example: 57
