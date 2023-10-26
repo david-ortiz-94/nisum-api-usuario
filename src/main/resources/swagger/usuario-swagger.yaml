@@ -1,0 +1,118 @@
+openapi: 3.0.1
+info:
+  title: API de Usuarios
+  description: API RESTful para la creación de usuarios
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+    description: Ruta base
+paths:
+  /usuario:
+    post:
+      tags:
+        - Registro
+      summary: Crear un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioDTO'
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioResponseDTO'
+        '400':
+          description: Error en la solicitud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: El correo ya está registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    UsuarioResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/UsuarioDTO'
+      properties:
+
+        id:
+          type: string
+          description: id del usuario
+          example: 061580b0-7387-11ee-b962-0242ac120002
+        created:
+          type: string
+          description: fecha de creación del usuario
+          example: 2023-10-21T12:00:00
+        modified:
+          type: string
+          description: fecha de la última actualización de usuario
+          example: 2023-10-21T12:00:00
+        last_login:
+          type: string
+          description: fecha de último ingreso
+          example: 2023-10-21T12:00:00
+        token:
+          type: string
+          description: token de acceso
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        isactive:
+          type: boolean
+          description: indicador si el usuario está habilitado
+          example: true
+
+    UsuarioDTO:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          description: nombre de usuario
+          example: Juan Rodriguez
+        email:
+          type: string
+          description: correo eletronico
+          example: juan@rodriguez.org
+        password:
+          type: string
+          description: contraseña
+          example: hunter2
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/TelefonoDTO'
+
+    TelefonoDTO:
+      type: object
+      properties:
+        number:
+          type: string
+          description: numero de telefono
+          example: 1234567
+        citycode:
+          type: string
+          description: código de ciudad
+          example: 1
+        contrycode:
+          type: string
+          description: código de país
+          example: 57
+    
+    Error:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          description: respuesta del error
