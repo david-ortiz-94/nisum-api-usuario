@@ -97,6 +97,7 @@ components:
           type: string
           description: contraseña
           example: hunter2
+          pattern: ^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})$
         phones:
           type: array
           items:

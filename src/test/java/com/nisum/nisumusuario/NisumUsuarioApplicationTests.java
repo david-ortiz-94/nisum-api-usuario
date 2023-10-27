@@ -1,13 +1,17 @@
 package com.nisum.nisumusuario;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 
-@SpringBootTest
 class NisumUsuarioApplicationTests {
-
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
     @Test
-    void contextLoads() {
+    void main() {
+        NisumUsuarioApplication.main(new String[] {"arg1", "arg2", "arg3"});
     }
 
 }

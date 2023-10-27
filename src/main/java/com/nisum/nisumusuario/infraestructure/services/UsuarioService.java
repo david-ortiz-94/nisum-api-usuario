@@ -11,6 +11,7 @@ import com.nisum.nisumusuario.utils.exceptions.ConflictException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.persistence.PersistenceException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +43,7 @@ public class UsuarioService implements UsuarioApiDelegate {
         String token = jwtTokenService.generateToken(usuario.getEmail());
         usuarioResponseDTO.setToken(token);
 
-        return ResponseEntity.ok(usuarioResponseDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioResponseDTO);
     }
 
     public ResponseEntity<UsuarioResponseDTO> fallBackUsuarioPost(UsuarioDTO usuarioDTO, PersistenceException ex) {

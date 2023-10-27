@@ -2,12 +2,14 @@ package com.nisum.nisumusuario.infraestructure.services;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class JwtTokenService {
 
     @Value("${jwt.secret}")
