@@ -19,10 +19,10 @@ Sigue estos pasos para probar la aplicación:
 1. Clona este repositorio en tu máquina local con GitBash:
 
    ```shell
-   git clone https://github.com/david-ortiz-94/nisum-usuario.git
+   git clone https://github.com/david-ortiz-94/nisum-api-usuario.git
 2. Navega al directorio de la aplicación descargada:
    ```shell
-   cd nisum-usuario
+   cd nisum-api-usuario
 
 3. Compila y empaqueta la aplicación utilizando Maven:
    ```shell
