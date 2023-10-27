@@ -56,7 +56,7 @@ class UsuarioServiceTest {
         ResponseEntity<UsuarioResponseDTO> responseEntity = usuarioService.usuarioPost(usuarioDTO);
         verify(usuarioRepository).save(usuario);
         assertNotNull(responseEntity);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     }
 
     @Test
