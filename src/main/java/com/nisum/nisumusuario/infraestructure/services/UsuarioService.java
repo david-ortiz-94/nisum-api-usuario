@@ -8,6 +8,8 @@ import com.nisum.nisumusuario.domain.entities.Usuario;
 import com.nisum.nisumusuario.domain.repositories.UsuarioRepository;
 import com.nisum.nisumusuario.utils.constants.Constants;
 import com.nisum.nisumusuario.utils.exceptions.ConflictException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import jakarta.persistence.PersistenceException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,16 +24,28 @@ public class UsuarioService implements UsuarioApiDelegate {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
-    @Override
-    public ResponseEntity<UsuarioResponseDTO> usuarioPost(UsuarioDTO usuarioDTO) {
-        Optional<Usuario> usuarioBuscado = usuarioRepository.findByEmail(usuarioDTO.getEmail());
+    private final JwtTokenService jwtTokenService;
 
+    @Override
+    @CircuitBreaker(name="usuarioPost", fallbackMethod = "fallBackUsuarioPost")
+    public ResponseEntity<UsuarioResponseDTO> usuarioPost(UsuarioDTO usuarioDTO) {
+
+        Optional<Usuario> usuarioBuscado = usuarioRepository.findByEmail(usuarioDTO.getEmail());
         if (usuarioBuscado.isPresent()) {
             throw new ConflictException(Constants.ERROR_MESSAGE_CONFLICT_EMAIL);
         }
 
         Usuario usuario = usuarioMapper.usuarioDTOToUsuario(usuarioDTO);
         usuarioRepository.save(usuario);
-        return ResponseEntity.ok(usuarioMapper.usuarioToUsuarioResponseDTO(usuario));
+        UsuarioResponseDTO usuarioResponseDTO = usuarioMapper
+                .usuarioToUsuarioResponseDTO(usuario);
+        String token = jwtTokenService.generateToken(usuario.getEmail());
+        usuarioResponseDTO.setToken(token);
+
+        return ResponseEntity.ok(usuarioResponseDTO);
+    }
+
+    public ResponseEntity<UsuarioResponseDTO> fallBackUsuarioPost(UsuarioDTO usuarioDTO, PersistenceException ex) {
+        throw new RuntimeException(Constants.ERROR_MESSAGE_BD);
     }
 }
